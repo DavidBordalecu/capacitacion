@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Referencia de Iconos - Clínica de Cuyo</title>
+  <style>
+    :root {
+      --primary: #0033A0;
+      --secondary: #7A9A01;
+      --bg: #F5F6FA;
+      --card: #ffffff;
+      --text: #1C1C1C;
+      --text-muted: #4B5768;
+      --border: #dcdfe3;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 30px 15px;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: var(--primary); font-size: 24px; margin-bottom: 4px; }
+    .subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
+    h2 {
+      color: var(--primary);
+      font-size: 16px;
+      margin: 25px 0 12px;
+      padding-left: 10px;
+      border-left: 4px solid var(--secondary);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 12px;
+    }
+    .emoji-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: all;
+    }
+    .emoji-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,51,160,0.12);
+    }
+    .emoji { font-size: 38px; line-height: 1.2; }
+    .name { font-size: 11px; color: var(--text-muted); margin-top: 6px; word-break: break-word; }
+    .tip {
+      background: #eef1ff;
+      border: 1px solid #d5dcff;
+      border-radius: var(--radius);
+      padding: 12px 15px;
+      font-size: 13px;
+      color: var(--text);
+      margin-top: 30px;
+    }
+    .tip code { background: #fff; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Referencia de Iconos</h1>
+    <p class="subtitle">Emojis disponibles para las tarjetas de capacitación. Haga clic en uno para copiarlo.</p>
+
+    <h2>Salud / Hospital</h2>
+    <div class="grid">
+      <div class="emoji-card"><div class="emoji">🏥</div><div class="name">Hospital</div></div>
+      <div class="emoji-card"><div class="emoji">🩺</div><div class="name">Estetoscopio</div></div>
+      <div class="emoji-card"><div class="emoji">💊</div><div class="name">Medicación</div></div>
+      <div class="emoji-card"><div class="emoji">💉</div><div class="name">Inyección</div></div>
+      <div class="emoji-card"><div class="emoji">🧪</div><div class="name">Laboratorio</div></div>
+      <div class="emoji-card"><div class="emoji">🩹</div><div class="name">Curita</div></div>
+      <div class="emoji-card"><div class="emoji">🩻</div><div class="name">Radiografía</div></div>
+      <div class="emoji-card"><div class="emoji">🦷</div><div class="name">Odontología</div></div>
+      <div class="emoji-card"><div class="emoji">🧬</div><div class="name">Biología</div></div>
+      <div class="emoji-card"><div class="emoji">🫀</div><div class="name">Corazón</div></div>
+      <div class="emoji-card"><div class="emoji">🫁</div><div class="name">Pulmones</div></div>
+      <div class="emoji-card"><div class="emoji">🩸</div><div class="name">Sangre</div></div>
+      <div class="emoji-card"><div class="emoji">🤒</div><div class="name">Fiebre</div></div>
+      <div class="emoji-card"><div class="emoji">👩‍⚕️</div><div class="name">Enfermera</div></div>
+      <div class="emoji-card"><div class="emoji">👨‍⚕️</div><div class="name">Médico</div></div>
+      <div class="emoji-card"><div class="emoji">🧑‍⚕️</div><div class="name">Profesional salud</div></div>
+    </div>
+
+    <h2>Higiene / Bioseguridad</h2>
+    <div class="grid">
+      <div class="emoji-card"><div class="emoji">🧼</div><div class="name">Jabón</div></div>
+      <div class="emoji-card"><div class="emoji">🧴</div><div class="name">Alcohol / Desinfectante</div></div>
+      <div class="emoji-card"><div class="emoji">🧤</div><div class="name">Guantes</div></div>
+      <div class="emoji-card"><div class="emoji">😷</div><div class="name">Barbijo</div></div>
+      <div class="emoji-card"><div class="emoji">🥽</div><div class="name">Anteojos protección</div></div>
+      <div class="emoji-card"><div class="emoji">🦠</div><div class="name">Microbio</div></div>
+      <div class="emoji-card"><div class="emoji">🧫</div><div class="name">Cultivo</div></div>
+      <div class="emoji-card"><div class="emoji">🚿</div><div class="name">Ducha</div></div>
+      <div class="emoji-card"><div class="emoji">💧</div><div class="name">Agua</div></div>
+      <div class="emoji-card"><div class="emoji">🧽</div><div class="name">Esponja</div></div>
+      <div class="emoji-card"><div class="emoji">🛡️</div><div class="name">Protección</div></div>
+    </div>
+
+    <h2>Seguridad / Residuos</h2>
+    <div class="grid">
+      <div class="emoji-card"><div class="emoji">⚠️</div><div class="name">Advertencia</div></div>
+      <div class="emoji-card"><div class="emoji">🚨</div><div class="name">Alerta</div></div>
+      <div class="emoji-card"><div class="emoji">⛔</div><div class="name">Prohibido</div></div>
+      <div class="emoji-card"><div class="emoji">🚫</div><div class="name">No permitido</div></div>
+      <div class="emoji-card"><div class="emoji">♻️</div><div class="name">Reciclaje</div></div>
+      <div class="emoji-card"><div class="emoji">🗑️</div><div class="name">Basura</div></div>
+      <div class="emoji-card"><div class="emoji">🦺</div><div class="name">Chaleco seguridad</div></div>
+      <div class="emoji-card"><div class="emoji">⛑️</div><div class="name">Casco cruz</div></div>
+      <div class="emoji-card"><div class="emoji">⚡</div><div class="name">Peligro eléctrico</div></div>
+      <div class="emoji-card"><div class="emoji">🔥</div><div class="name">Fuego</div></div>
+      <div class="emoji-card"><div class="emoji">🔒</div><div class="name">Seguro</div></div>
+      <div class="emoji-card"><div class="emoji">📦</div><div class="name">Insumos</div></div>
+    </div>
+
+    <h2>Emergencias</h2>
+    <div class="grid">
+      <div class="emoji-card"><div class="emoji">🚑</div><div class="name">Ambulancia</div></div>
+      <div class="emoji-card"><div class="emoji">🚒</div><div class="name">Bomberos</div></div>
+      <div class="emoji-card"><div class="emoji">🚓</div><div class="name">Policía</div></div>
+      <div class="emoji-card"><div class="emoji">🆘</div><div class="name">Ayuda</div></div>
+      <div class="emoji-card"><div class="emoji">💔</div><div class="name">Emergencia cardíaca</div></div>
+      <div class="emoji-card"><div class="emoji">🔔</div><div class="name">Timbre / Alarma</div></div>
+      <div class="emoji-card"><div class="emoji">🆎</div><div class="name">Código de alerta</div></div>
+      <div class="emoji-card"><div class="emoji">⚕️</div><div class="name">Cruz médica</div></div>
+    </div>
+
+    <h2>Educación / Otros</h2>
+    <div class="grid">
+      <div class="emoji-card"><div class="emoji">📚</div><div class="name">Material educativo</div></div>
+      <div class="emoji-card"><div class="emoji">✏️</div><div class="name">Evaluación</div></div>
+      <div class="emoji-card"><div class="emoji">✅</div><div class="name">Aprobado</div></div>
+      <div class="emoji-card"><div class="emoji">❌</div><div class="name">No aprobado</div></div>
+      <div class="emoji-card"><div class="emoji">📄</div><div class="name">Certificado</div></div>
+      <div class="emoji-card"><div class="emoji">📊</div><div class="name">Reportes</div></div>
+      <div class="emoji-card"><div class="emoji">🏆</div><div class="name">Logro</div></div>
+      <div class="emoji-card"><div class="emoji">⭐</div><div class="name">Completado</div></div>
+      <div class="emoji-card"><div class="emoji">📅</div><div class="name">Calendario</div></div>
+      <div class="emoji-card"><div class="emoji">🕐</div><div class="name">Tiempo</div></div>
+      <div class="emoji-card"><div class="emoji">💻</div><div class="name">Sistema</div></div>
+      <div class="emoji-card"><div class="emoji">🔬</div><div class="name">Investigación</div></div>
+      <div class="emoji-card"><div class="emoji">🗣️</div><div class="name">Comunicación</div></div>
+      <div class="emoji-card"><div class="emoji">👥</div><div class="name">Personal / Equipo</div></div>
+    </div>
+
+    <p class="tip">💡 Haga clic en cualquier ícono para copiarlo, y luego péguelo en el campo <code>icon</code> de la capacitación correspondiente en <code>script.js</code>.</p>
+  </div>
+
+  <script>
+    document.querySelectorAll('.emoji-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const emoji = card.querySelector('.emoji').textContent.trim();
+        navigator.clipboard.writeText(emoji).then(() => {
+          card.style.borderColor = '#7A9A01';
+          setTimeout(() => { card.style.borderColor = ''; }, 600);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

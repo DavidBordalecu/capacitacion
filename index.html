@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Codificación y viewport para dispositivos móviles -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma de Capacitación - Clínica de Cuyo</title>
+
+  <!-- Librerías CDN: EmailJS para notificaciones, SheetJS para exportar Excel, jsPDF para certificados -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="styles.css?v=11">
+</head>
+<body>
+
+  <!-- Contenedor principal: ancho máximo 780px, centrado -->
+  <div class="container">
+
+    <!-- Encabezado con nombre de la clínica y acceso rápido a Admin -->
+    <header>
+      <div class="logo-title">
+        <img src="img/LOGO%20Clinica%20de%20Cuyo_2.png" alt="Clínica de Cuyo" class="logo">
+      </div>
+      <p class="header-subtitle">Sistema de Capacitación Institucional</p>
+      <!-- Botón Admin visible en todas las pantallas, arriba a la derecha -->
+      <button id="btn-admin" class="admin-link" title="Administración">🔒 Admin</button>
+    </header>
+
+    <!-- ============================================================
+         PASO 1: REGISTRO DEL EMPLEADO
+         ============================================================ -->
+    <div id="step-register" class="section active">
+      <h2>Ingreso del Personal</h2>
+      <p class="section-desc">Ingrese sus datos para acceder al sistema de capacitación.</p>
+      <form id="user-form">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" placeholder="Ej. María" required>
+        </div>
+        <div class="form-group">
+          <label for="apellido">Apellido:</label>
+          <input type="text" id="apellido" placeholder="Ej. González" required>
+        </div>
+        <div class="form-group">
+          <label for="legajo">Número de Legajo:</label>
+          <input type="text" id="legajo" placeholder="Ej. 4521" inputmode="numeric" pattern="[0-9]*" required>
+        </div>
+        <div class="form-group">
+          <label for="sector">Sector / Área:</label>
+          <select id="sector" required></select>
+        </div>
+        <button type="submit" class="btn btn-primary">Ingresar</button>
+      </form>
+    </div>
+
+    <!-- ============================================================
+         PASO 2: DASHBOARD - SELECCIÓN DE CAPACITACIÓN
+         ============================================================ -->
+    <div id="step-dashboard" class="section">
+      <h2>Seleccione su Capacitación</h2>
+      <p class="section-desc">Elija el curso que desea realizar. Debe completarlo en su totalidad para aprobar.</p>
+      <!-- Grilla de tarjetas de capacitación, generada dinámicamente por JavaScript -->
+      <div id="dashboard-grid" class="dashboard-grid"></div>
+      <!-- Barra inferior con datos del usuario y botón "editar legajo" -->
+      <p class="small-text" id="user-info-bar"></p>
+    </div>
+
+    <!-- ============================================================
+         PASO 3: REPRODUCTOR DE VIDEO
+         ============================================================ -->
+    <div id="step-video" class="section">
+      <div class="section-header">
+        <h2 id="video-title">Video de Capacitación</h2>
+        <button id="btn-back-dash-video" class="btn btn-secondary btn-sm">Volver al Dashboard</button>
+      </div>
+      <p class="section-desc">Vea el video completo. No es posible adelantar el contenido.</p>
+      <!-- Wrapper con overlay de play y controles personalizados (sin barra de progreso) -->
+      <div class="video-wrapper">
+        <div id="player-container"></div>
+        <!-- Overlay grande de "play" (desaparece al reproducir) -->
+        <div class="play-overlay" id="play-overlay">
+          <div class="play-button-big" id="play-btn-big">▶</div>
+        </div>
+        <!-- Controles inferiores: solo play/pause y tiempo -->
+        <div class="custom-controls" id="custom-controls">
+          <button id="ctrl-play" class="ctrl-btn">▶</button>
+          <div class="ctrl-time" id="ctrl-time">0:00 / 0:00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         PASO 4: EVALUACIÓN (CUESTIONARIO)
+         ============================================================ -->
+    <div id="step-quiz" class="section">
+      <div class="section-header">
+        <h2>Evaluación de Conocimientos</h2>
+        <button id="btn-back-dash-quiz" class="btn btn-secondary btn-sm">Volver al Dashboard</button>
+      </div>
+      <p class="section-desc">Responda correctamente todas las preguntas para aprobar.</p>
+      <form id="quiz-form">
+        <!-- Contenedor donde se renderizan las tarjetas de preguntas -->
+        <div id="questions-container"></div>
+        <button type="submit" class="btn btn-primary">Enviar Evaluación</button>
+      </form>
+      <!-- Espacio para feedback (aprobado / no aprobado) -->
+      <div id="quiz-feedback"></div>
+    </div>
+
+    <!-- ============================================================
+         PASO 5: PANTALLA DE ÉXITO (APROBÓ LA CAPACITACIÓN)
+         ============================================================ -->
+    <div id="step-success" class="section">
+      <div class="alert alert-success">
+        <div class="icon-success">✓</div>
+        <h2>¡Capacitación Aprobada!</h2>
+        <p id="success-message">Los datos se han enviado correctamente a la administración.</p>
+        <!-- Botón para descargar el certificado PDF -->
+        <button id="btn-download-cert" class="btn btn-secondary" style="margin-top:15px;">⬇ Descargar Certificado PDF</button>
+        <button id="btn-dashboard-after-success" class="btn btn-primary" style="margin-top:10px;">Volver al Dashboard</button>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         PASO 6: TODAS LAS CAPACITACIONES COMPLETADAS
+         ============================================================ -->
+    <div id="step-completed" class="section">
+      <div class="alert alert-success">
+        <div class="icon-success">★</div>
+        <h2>¡Todas las capacitaciones completadas!</h2>
+        <p>Ha finalizado exitosamente todas las capacitaciones disponibles.</p>
+        <button id="btn-reset-all" class="btn btn-primary" style="margin-top:20px;">Reiniciar</button>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         PASO 7: PANEL DE ADMINISTRACIÓN
+         ============================================================ -->
+    <div id="step-admin" class="section">
+      <div class="section-header">
+        <h2>Administración</h2>
+      </div>
+
+      <!-- Formulario de acceso con contraseña -->
+      <div id="admin-login">
+        <p class="section-desc">Ingrese la contraseña de administrador para acceder a los registros.</p>
+        <form id="admin-form">
+          <div class="form-group">
+            <label for="admin-password">Contraseña:</label>
+            <input type="password" id="admin-password" placeholder="Contraseña" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Acceder</button>
+        </form>
+        <div id="admin-error" class="alert alert-error" style="display:none;margin-top:15px;">
+          Contraseña incorrecta.
+        </div>
+      </div>
+
+      <!-- Panel interno con estadísticas y tabla de registros -->
+      <div id="admin-panel" style="display:none;">
+        <p class="section-desc">Panel de control con estadísticas y registros de todas las capacitaciones.</p>
+
+        <!-- Tarjetas de estadísticas (renderizadas por JS) -->
+        <div id="admin-stats" class="admin-stats"></div>
+        <!-- Desglose por capacitación con barras de progreso (renderizado por JS) -->
+        <div id="admin-breakdown" class="admin-breakdown"></div>
+
+        <!-- Botones de acción -->
+        <div style="display:flex;gap:10px;margin:20px 0 15px;flex-wrap:wrap;">
+          <button id="btn-admin-refresh" class="btn btn-secondary btn-sm">🔄 Actualizar</button>
+          <button id="btn-admin-export" class="btn btn-secondary btn-sm">⬇ Exportar CSV</button>
+          <button id="btn-admin-users" class="btn btn-secondary btn-sm">👥 Gestionar Usuarios</button>
+          <button id="btn-admin-clear" class="btn btn-secondary btn-sm" style="background:#842029;">🗑 Limpiar Registros</button>
+        </div>
+
+        <h3 style="color:var(--primary);margin-bottom:10px;font-size:16px;">Registros Detallados</h3>
+        <!-- Tabla de registros generada dinámicamente -->
+        <div id="admin-table-wrapper" style="overflow-x:auto;"></div>
+
+        <!-- ============================================================
+             GESTIÓN DE USUARIOS (legajos registrados)
+             ============================================================ -->
+        <div id="admin-users" style="display:none;margin-top:25px;">
+          <div class="admin-users-header">
+            <h3 style="color:var(--primary);margin:0;font-size:16px;">Usuarios Registrados</h3>
+            <button id="btn-admin-users-clear" class="btn btn-danger btn-sm">🗑 Eliminar Todos</button>
+          </div>
+          <p class="section-desc" style="margin-top:8px;">
+            Lista de legajos registrados. Puede <strong>modificar</strong> los datos de un usuario,
+            <strong>eliminar uno puntual</strong> o <strong>eliminar todos</strong>.
+            Todas las acciones requieren la contraseña de administrador.
+          </p>
+          <div class="admin-users-toolbar">
+            <input type="text" id="user-search" class="user-search-input" placeholder="🔍 Buscar por legajo...">
+          </div>
+          <div id="admin-users-table-wrapper" style="overflow-x:auto;"></div>
+          <div id="admin-users-pagination" class="admin-users-pagination" style="display:none;">
+            <button id="admin-users-prev" type="button" class="btn btn-secondary btn-xs">← Anterior</button>
+            <span id="admin-users-page-info">Página 1 de 1</span>
+            <button id="admin-users-next" type="button" class="btn btn-secondary btn-xs">Siguiente →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón de cierre de sesión (siempre visible, bajo el botón Acceder) -->
+      <button id="btn-admin-close" type="button" class="btn btn-secondary btn-admin-close">Cerrar sesión</button>
+    </div>
+
+    <!-- ============================================================
+         MODAL: GESTIÓN DE USUARIOS (doble validación)
+         Se muestra al presionar "Gestionar Usuarios" y luego elegir
+         Modificar / Eliminar puntual / Eliminar todos. Pide la
+         contraseña admin nuevamente y luego confirma la acción.
+         ============================================================ -->
+    <div id="modal-user" class="modal-overlay" style="display:none;">
+      <div class="modal">
+        <h3 id="user-modal-title">Gestión de Usuarios</h3>
+
+        <!-- Fase 1: doble validación con contraseña de administrador -->
+        <div id="user-phase-password">
+          <p class="section-desc">Para continuar, ingrese nuevamente la contraseña de administrador.</p>
+          <div class="form-group" style="text-align:left;">
+            <label for="user-password">Contraseña:</label>
+            <input type="password" id="user-password" placeholder="Contraseña" required>
+          </div>
+          <div id="user-password-error" class="alert alert-error" style="display:none;margin-bottom:15px;">Contraseña incorrecta.</div>
+          <div class="modal-actions">
+            <button id="user-cancel-password" class="btn btn-secondary btn-sm">Cancelar</button>
+            <button id="user-continue" class="btn btn-primary btn-sm">Continuar</button>
+          </div>
+        </div>
+
+        <!-- Fase 2a: formulario de modificación -->
+        <div id="user-phase-edit" style="display:none;">
+          <p class="section-desc">Modifique los datos del usuario. El legajo no se puede modificar.</p>
+          <div class="modal-data" style="text-align:left;">
+            <div class="form-group">
+              <label for="user-edit-legajo">Legajo:</label>
+              <input type="text" id="user-edit-legajo" disabled>
+            </div>
+            <div class="form-group">
+              <label for="user-edit-nombre">Nombre:</label>
+              <input type="text" id="user-edit-nombre" placeholder="Nombre" required>
+            </div>
+            <div class="form-group">
+              <label for="user-edit-apellido">Apellido:</label>
+              <input type="text" id="user-edit-apellido" placeholder="Apellido" required>
+            </div>
+            <div class="form-group">
+              <label for="user-edit-sector">Sector / Área:</label>
+              <select id="user-edit-sector"></select>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button id="user-edit-back" class="btn btn-secondary btn-sm">Volver</button>
+            <button id="user-edit-save" class="btn btn-primary btn-sm">Guardar Cambios</button>
+          </div>
+        </div>
+
+        <!-- Fase 2b: confirmación de eliminación -->
+        <div id="user-phase-delete" style="display:none;">
+          <div id="user-delete-warning" class="alert alert-error" style="margin-bottom:15px;"></div>
+          <div class="modal-actions">
+            <button id="user-delete-back" class="btn btn-secondary btn-sm">Volver</button>
+            <button id="user-delete-confirm" class="btn btn-danger btn-sm">🗑 Eliminar</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================================
+         MODAL: ELIMINAR REGISTROS (doble validación)
+         Se muestra al presionar "Limpiar Registros". Pide la
+         contraseña admin nuevamente y luego confirma la eliminación
+         definitiva, que no se puede recuperar.
+         ============================================================ -->
+    <div id="modal-clear" class="modal-overlay" style="display:none;">
+      <div class="modal">
+        <h3>Eliminar Registros</h3>
+
+        <!-- Fase 1: doble validación con contraseña de administrador -->
+        <div id="clear-phase-password">
+          <p class="section-desc">Para continuar, ingrese nuevamente la contraseña de administrador.</p>
+          <div class="form-group" style="text-align:left;">
+            <label for="clear-password">Contraseña:</label>
+            <input type="password" id="clear-password" placeholder="Contraseña" required>
+          </div>
+          <div id="clear-error" class="alert alert-error" style="display:none;margin-bottom:15px;">Contraseña incorrecta.</div>
+          <div class="modal-actions">
+            <button id="clear-cancel" class="btn btn-secondary btn-sm">Cancelar</button>
+            <button id="clear-continue" class="btn btn-primary btn-sm">Continuar</button>
+          </div>
+        </div>
+
+        <!-- Fase 2: confirmación final con advertencia -->
+        <div id="clear-phase-confirm" style="display:none;">
+          <div class="alert alert-error" style="margin-bottom:15px;">
+            <p><strong>⚠️ Esta acción es DEFINITIVA.</strong></p>
+            <p>Todos los registros de intentos serán eliminados y <strong>NO se podrán recuperar</strong>.</p>
+            <p>Se recomienda <strong>exportar los registros antes de continuar</strong>.</p>
+          </div>
+          <div class="modal-actions">
+            <button id="clear-export" class="btn btn-secondary btn-sm">⬇ Exportar antes de eliminar</button>
+            <button id="clear-back" class="btn btn-secondary btn-sm">Volver</button>
+            <button id="clear-delete" class="btn btn-danger btn-sm">🗑 Eliminar definitivamente</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================================
+         MODAL: CONFIRMACIÓN DE NUEVO LEGAJO
+         Se muestra cuando el usuario ingresa un legajo no registrado,
+         corroborando los datos antes de crear el registro en la base.
+         ============================================================ -->
+    <div id="modal-confirm" class="modal-overlay" style="display:none;">
+      <div class="modal">
+        <h3>Confirmar Datos de Registro</h3>
+        <p class="section-desc">El legajo <strong id="confirm-legajo"></strong> no está registrado. Corrobore los datos antes de continuar:</p>
+        <div id="confirm-data" class="modal-data"></div>
+        <div class="modal-actions">
+          <button id="modal-cancel" class="btn btn-secondary btn-sm">Cancelar</button>
+          <button id="modal-accept" class="btn btn-primary btn-sm">Aceptar</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Script principal con toda la lógica de la aplicación -->
+  <script src="script.js?v=10"></script>
+</body>
+</html>
